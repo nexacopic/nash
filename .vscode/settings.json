@@ -5,6 +5,7 @@
         "vga.h": "c",
         "stddef.h": "c",
         "printf.h": "c",
-        "limine.h": "c"
+        "limine.h": "c",
+        "idt.h": "c"
     }
 }

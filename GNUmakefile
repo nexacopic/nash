@@ -76,7 +76,7 @@ obj/%.asm.o: src/%.asm GNUmakefile
 
 .PHONY: clean full-clean
 clean:
-	rm -rf bin obj Nitro.raw.bin
+	rm -rf bin obj nash.raw.bin
 
 full-clean:
-	rm -rf bin obj Nitro.raw.bin image.iso
+	rm -rf bin obj nash.raw.bin image.iso
