@@ -1,5 +1,6 @@
 #include "nighterm.h"
 #include "display/vga.h"
+#include "libc/mem.h"
 
 struct Terminal term;
 uint8_t fg_r = 255;
@@ -11,15 +12,8 @@ uint8_t bg_g = 0;
 uint8_t bg_b = 0;
 
 // TODO: Move memset into its own stdlib
-void *memset(void *ptr, int value, size_t num)
-{
-    unsigned char *p = ptr;
-    while (num--)
-    {
-        *p++ = (unsigned char)value;
-    }
-    return ptr;
-}
+// done!
+
 
 int init_nighterm(struct limine_file *font)
 {
