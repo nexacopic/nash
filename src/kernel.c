@@ -6,6 +6,8 @@
 #include "utilities/logger.h"
 #include "idt/idt.h"
 
+#include "errors/error_handler.h"
+
 #define PSF2_MODE
 
 static volatile struct limine_module_request mod_request = {
@@ -25,8 +27,12 @@ void _start(void)
     init_idt();
     log(OK, "Initialized IDT.");
 
-    nighterm_set_char_fg(225, 130, 250);
-    printf("Welcome to nash!");
+    register_errors();
+    log(OK, "Registered errors.");
 
+    nighterm_set_char_fg(225, 130, 250);
+    printf("Welcome to nash!\n");
+    nighterm_set_char_fg(225, 255, 255);
+    
     hlt();
 }

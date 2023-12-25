@@ -6,6 +6,7 @@
         "stddef.h": "c",
         "printf.h": "c",
         "limine.h": "c",
-        "idt.h": "c"
+        "idt.h": "c",
+        "stdint.h": "c"
     }
 }
