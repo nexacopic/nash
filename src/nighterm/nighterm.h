@@ -17,6 +17,10 @@
 
 #endif
 
+#ifndef DRAW_CURSOR
+#define DRAW_CURSOR 0
+#endif
+
 typedef struct {
     uint8_t magic[4];
     uint32_t version;
@@ -38,6 +42,7 @@ struct Terminal {
     int cy;
     char buffer[4096*4];
     char* title;
+    int draw_cursor;
 };
 
 extern struct Terminal term;

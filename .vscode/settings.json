@@ -3,6 +3,8 @@
         "cpu.h": "c",
         "nighterm.h": "c",
         "vga.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "printf.h": "c",
+        "limine.h": "c"
     }
 }

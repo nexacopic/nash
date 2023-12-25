@@ -12,6 +12,11 @@ static volatile struct limine_module_request mod_request = {
 void _start(void) {
     init_display();
     init_nighterm(mod_request.response->modules[0]);
-    printf("Welcome to nash!\n");
+
+    term.draw_cursor = 0; // Makes sure the cursor isnt being drawn
+
+    nighterm_set_char_fg(225, 130, 250);
+    printf("Welcome to nash!");
+    
     hlt();
 }
