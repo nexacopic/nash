@@ -7,4 +7,4 @@ void *memmove(void *dest, const void *src, size_t n);
 
 int memcmp(const void *s1, const void *s2, size_t n);
 
-void *malloc(int size); // not implemented yet
+void *malloc(size_t size); // not implemented yet
