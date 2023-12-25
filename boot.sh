@@ -1,12 +1,11 @@
 #!/bin/bash
-
 OS_NAME="nash"
 
 make -C limine
 make
 
 mkdir -p iso_root
-cp -v bin/"$OS_NAME" limine.cfg limine/limine-bios.sys \
+cp -v bin/"$OS_NAME" kfont.psf limine.cfg limine/limine-bios.sys \
     limine/limine-bios-cd.bin limine/limine-uefi-cd.bin iso_root/
 
 mkdir -p iso_root/EFI/BOOT
