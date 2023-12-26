@@ -1,4 +1,5 @@
 #include "kif.h"
+#include <stdint.h>
 
 void draw_image(struct limine_file* image) {
     char* rawData = (char*)image->address;
@@ -19,8 +20,11 @@ void draw_image(struct limine_file* image) {
     // Move past the newline character to get to pixel data
     i++;
 
+    // Calculate number of rows needed for the image based on height
+    uint64_t imageRows = (height + term.fonthdr.height - 1) / term.fonthdr.height;
+
     // Parse pixel data
-    uint64_t x = term.curX, y = 0;
+    uint64_t x = term.curX * term.fonthdr.width, y = term.curY * term.fonthdr.height;
     uint8_t r, g, b;
 
     while (rawData[i] != '\0') {
@@ -44,11 +48,19 @@ void draw_image(struct limine_file* image) {
         }
         i++; // Move past the newline character
 
-        draw_pixel(x, y, r, g, b);
+        draw_pixel(x, y, r, b, g);
         x++;
         if (x == width) {
             x = 0;
             y++;
+            if (y == term.rows) { // Check if we've reached the end of terminal rows
+                term.curY++;
+                y = 0;
+            }
         }
     }
+
+    // Adjust curY based on the number of rows used by the image
+    term.curY += imageRows;
 }
+
