@@ -4,12 +4,11 @@ override MAKEFLAGS += -rR
 
 override KERNEL := nash
 
+UNAME_S := $(shell uname -s)
+
 ifeq ($(UNAME_S),Darwin)
     override CC := x86_64-elf-gcc
     override LD := x86_64-elf-ld
-else
-    override CC := cc
-    override LD := ld
 endif
 
 define DEFAULT_VAR =
