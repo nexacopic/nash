@@ -6,6 +6,8 @@
 #include "utilities/logger.h"
 #include "idt/idt.h"
 
+#include "graphics/bitmap.h"
+
 #include "errors/error_handler.h"
 
 #define PSF2_MODE
@@ -29,10 +31,16 @@ void _start(void)
 
     register_errors();
     log(OK, "Registered errors.");
+    
+    printf("\n");
+    printf("* Loaded %u modules\n", mod_request.response->module_count);
+    printf("\n");
 
     nighterm_set_char_fg(225, 130, 250);
     printf("Welcome to nash!\n");
     nighterm_set_char_fg(225, 255, 255);
+
+    draw_image(mod_request.response->modules[1]);
     
     hlt();
 }

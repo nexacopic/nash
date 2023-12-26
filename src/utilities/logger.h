@@ -10,10 +10,11 @@ typedef enum {
     ERROR,
     PANIC,
     OK,
+    DEBUG,
     CUSTOM
 } LogLevel;
 
-void log(LogLevel level, const char* message) {
+void log(LogLevel level, const char* message, ...) {
     const char* level_str;
     int r, g, b;
 
@@ -37,6 +38,10 @@ void log(LogLevel level, const char* message) {
         case OK:
             level_str = "Ok";
             r = 0; g = 255; b = 0;
+            break;
+        case DEBUG:
+            level_str = "Debug";
+            r = 0; g = 155; b = 255;
             break;
         default:
             level_str = "Unknown";

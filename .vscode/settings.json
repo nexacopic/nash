@@ -7,6 +7,9 @@
         "printf.h": "c",
         "limine.h": "c",
         "idt.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "serial.h": "c",
+        "mem.h": "c",
+        "error_handler.h": "c"
     }
 }

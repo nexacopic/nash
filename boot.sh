@@ -5,7 +5,7 @@ make -C limine
 make
 
 mkdir -p iso_root
-cp -v bin/"$OS_NAME" kfont.psf limine.cfg limine/limine-bios.sys \
+cp -v bin/"$OS_NAME" kfont.psf test.bmp limine.cfg limine/limine-bios.sys \
     limine/limine-bios-cd.bin limine/limine-uefi-cd.bin iso_root/
 
 mkdir -p iso_root/EFI/BOOT

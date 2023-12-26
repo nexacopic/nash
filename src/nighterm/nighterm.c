@@ -106,7 +106,6 @@ void nighterm_write(char ch)
     case '\n':
         term.curX = 0;
         term.curY++;
-
         break;
     case '\t':
         term.curX += INDENT_AMOUNT - (term.curX % INDENT_AMOUNT);
@@ -118,6 +117,11 @@ void nighterm_write(char ch)
         nighterm_do_curinv();
         break; // ignore termination
     default:
+        // Check if ch is not an ASCII character
+        if (ch < 0 || ch > 127) {
+            ch = '\0';
+        }
+
         int bufferIndex = term.curY * term.cols + term.curX;
         term.buffer[bufferIndex] = ch;
         nighterm_render_char(term.curY, term.curX, ch);
@@ -131,6 +135,7 @@ void nighterm_write(char ch)
         break;
     }
 }
+
 
 void nighterm_move_cursor(int row, int col)
 {
