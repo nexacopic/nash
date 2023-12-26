@@ -40,7 +40,7 @@ void _start(void)
     printf("Welcome to nash!\n");
     nighterm_set_char_fg(225, 255, 255);
 
-    printf("\n* Bitmap image test:\n");
+    printf("\n* Kernel Image Format test:\n");
     draw_image(mod_request.response->modules[1]);
     
     hlt();
