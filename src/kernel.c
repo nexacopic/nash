@@ -37,12 +37,8 @@ void _start(void)
     printf("\n");
 
     nighterm_set_char_fg(225, 130, 250);
-    printf("Welcome to nash!\n");
+    printf("Welcome to nash!\n\n");
     nighterm_set_char_fg(225, 255, 255);
-
-    printf("\n* Kernel Image Format test:\n\n");
-    draw_image(mod_request.response->modules[1]);
-    printf("Done.\n");
-    
+    draw_image(mod_request.response->modules[1]);   
     hlt();
 }
