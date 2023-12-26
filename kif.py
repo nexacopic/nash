@@ -1,18 +1,20 @@
-import random
+import sys
+from PIL import Image
 
-def save_custom_image(filename, width, height):
-    with open(filename, 'w') as file:
-        file.write(f"{width} {height}\n")
-        for _ in range(height):
-            row = []
-            for _ in range(width):
-                r = random.randint(0, 255)
-                g = random.randint(0, 255)
-                b = random.randint(0, 255)
-                file.write(f"{r} {g} {b}\n")
+def save_custom_image_from_jpg(input_image_path, output_text_file):
+    with Image.open(input_image_path) as img:
+        width, height = img.size
+        pixel_data = list(img.getdata())
 
-# Example usage:
-width = 100
-height = 100
+        with open(output_text_file, 'w') as file:
+            file.write(f"{width} {height}\n")
+            for pixel in pixel_data:
+                file.write(f"{pixel[0]} {pixel[1]} {pixel[2]}\n")
 
-save_custom_image('test.kif', width, height)
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python main.py <input file> <output file>")
+    else:
+        input_image_path = sys.argv[1]
+        output_text_file = sys.argv[2]
+        save_custom_image_from_jpg(input_image_path, output_text_file)
