@@ -37,7 +37,7 @@ void _start(void)
     printf("* Loaded %u modules\n", mod_request.response->module_count);
     printf("\n");
 
-    // filesystem_setup(mod_request.response->module_count);
+    filesystem_setup(mod_request.response->modules[3]);
 
     nighterm_set_char_fg(225, 130, 250);
     printf("Welcome to nash!\n\n");
