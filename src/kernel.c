@@ -6,7 +6,7 @@
 #include "utilities/logger.h"
 #include "idt/idt.h"
 
-#include "graphics/bitmap.h"
+#include "graphics/kif.h"
 
 #include "errors/error_handler.h"
 
