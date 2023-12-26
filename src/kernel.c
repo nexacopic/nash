@@ -10,6 +10,8 @@
 
 #include "errors/error_handler.h"
 
+#include "libc/mem.h"
+
 #define PSF2_MODE
 
 static volatile struct limine_module_request mod_request = {
@@ -31,6 +33,9 @@ void _start(void)
 
     register_errors();
     log(OK, "Registered errors.");
+
+    init_physical_memory();
+    log(OK, "Initialized Memory Manager");
     
     printf("\n");
     printf("* Loaded %u modules\n", mod_request.response->module_count);
@@ -40,5 +45,7 @@ void _start(void)
     printf("Welcome to nash!\n\n");
     nighterm_set_char_fg(225, 255, 255);
     draw_image(mod_request.response->modules[1]);   
+
+
     hlt();
 }
