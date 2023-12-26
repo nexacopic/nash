@@ -32,6 +32,8 @@ Consider the following example of a 3x3 image:
 
 This represents a 3x3 image where each row represents the RGB values of pixels in the image.
 
+You can use the `kif.py` tool to generate images from standard JPEG images and etc
+
 ## Usage
 KIF's are used in the kernel to display simole
 images like logos and icons 
