@@ -1,8 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
-#include <limine.h>
-#include <nighterm/nighterm.h>
 
 void init_physical_memory();
 

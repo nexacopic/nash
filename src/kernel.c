@@ -9,6 +9,7 @@
 #include "graphics/kif.h"
 
 #include "libc/mem.h"
+#include "drivers/fs/tmpfs.h"
 
 #define PSF2_MODE
 
@@ -35,6 +36,8 @@ void _start(void)
     printf("\n");
     printf("* Loaded %u modules\n", mod_request.response->module_count);
     printf("\n");
+
+    // filesystem_setup(mod_request.response->module_count);
 
     nighterm_set_char_fg(225, 130, 250);
     printf("Welcome to nash!\n\n");

@@ -1,4 +1,6 @@
 #include "mem.h"
+#include <limine.h>
+#include <nighterm/nighterm.h>
 
 
 volatile struct limine_memmap_request memmap_request = { // memory map
@@ -97,6 +99,7 @@ int memcmp(const void *s1, const void *s2, size_t n) {
 
 void *malloc(size_t size)
 {
+    // i am going insane
     block_t *current, *previous = NULL;
     void *result = NULL;
 
