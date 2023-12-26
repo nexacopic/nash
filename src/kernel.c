@@ -8,8 +8,6 @@
 
 #include "graphics/kif.h"
 
-#include "errors/error_handler.h"
-
 #include "libc/mem.h"
 
 #define PSF2_MODE
@@ -31,9 +29,6 @@ void _start(void)
     init_idt();
     log(OK, "Initialized IDT.");
 
-    register_errors();
-    log(OK, "Registered errors.");
-
     init_physical_memory();
     log(OK, "Initialized Memory Manager");
     
@@ -44,8 +39,7 @@ void _start(void)
     nighterm_set_char_fg(225, 130, 250);
     printf("Welcome to nash!\n\n");
     nighterm_set_char_fg(225, 255, 255);
-    draw_image(mod_request.response->modules[1]);   
-
+    draw_image(mod_request.response->modules[1]);
 
     hlt();
 }
