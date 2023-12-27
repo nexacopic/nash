@@ -56,5 +56,6 @@ void nighterm_write(char ch);
 void nighterm_move_cursor(int row, int col);
 void nighterm_do_curinv();
 void nighterm_redraw();
+void nighterm_scroll_down();
 
 #endif // NIGHTERM_H_

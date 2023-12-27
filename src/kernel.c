@@ -44,6 +44,7 @@ void _start(void)
     printf("Welcome to nash!\n\n");
     nighterm_set_char_fg(225, 255, 255);
     draw_image(mod_request.response->modules[1]);
-    speaker_play(5000);
+    nighterm_scroll_down();
+    printf("scrolled???\n");
     hlt();
 }

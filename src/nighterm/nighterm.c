@@ -14,7 +14,6 @@ uint8_t bg_b = 0;
 // TODO: Move memset into its own stdlib
 // done!
 
-
 int init_nighterm(struct limine_file *font)
 {
     char *psf2buf = font->address;
@@ -118,24 +117,23 @@ void nighterm_write(char ch)
         break; // ignore termination
     default:
         // Check if ch is not an ASCII character
-        if (ch < 0 || ch > 127) {
+        if (ch < 0 || ch > 127)
+        {
             ch = '\0';
         }
 
         int bufferIndex = term.curY * term.cols + term.curX;
         term.buffer[bufferIndex] = ch;
+        if (term.curY + 1 >= term.cols)
+        {
+            nighterm_scroll_down();
+        }
         nighterm_render_char(term.curY, term.curX, ch);
         term.curX++;
-        if (term.curX - 1 == term.cols)
-        {
-            term.curY++;
-        }
-
         nighterm_do_curinv();
         break;
     }
 }
-
 
 void nighterm_move_cursor(int row, int col)
 {
@@ -185,4 +183,12 @@ void nighterm_do_curinv()
         fg_g = tmp_g;
         fg_b = tmp_b;
     }
+}
+
+void nighterm_scroll_down()
+{
+    size_t buffer_size = (size_t)term.rows * term.cols;
+    memcpy(term.buffer + term.rows, term.buffer, buffer_size);
+    memset(term.buffer + buffer_size - term.rows, 0, buffer_size - term.rows);
+    nighterm_redraw();
 }
