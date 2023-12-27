@@ -10,6 +10,7 @@
 
 #include "libc/mem.h"
 #include "drivers/fs/tmpfs.h"
+#include "drivers/speaker_pc/speaker.h"
 
 #define PSF2_MODE
 
@@ -43,6 +44,6 @@ void _start(void)
     printf("Welcome to nash!\n\n");
     nighterm_set_char_fg(225, 255, 255);
     draw_image(mod_request.response->modules[1]);
-
+    speaker_play(5000);
     hlt();
 }

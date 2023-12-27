@@ -1,5 +1,7 @@
 #include "idt.h"
 #include "utilities/printf.h"
+#include "utilities/panic.h"
+#include "cpu/cpu.h"
 
 #define IDT_ENTRIES 256
 
@@ -74,19 +76,8 @@ void init_idt() {
 
 void excp_handler(int_frame_t frame) {
 	if (frame.vector < 0x20) {
-        // TODO: Add the faulty CPU number instead of the placeholder
-		printf("\npanic(cpu 1, 0x%.16llx): type %i (%s), register dump:\n",
-			  frame.rip, frame.vector, exception_strings[frame.vector]);
-
-        // TODO: Write read_cr*()
-        // printf("cr0: 0x%.16llx, cr2: 0x%.16llx, cr3: 0x%.16llx, cr4: 0x%.16llx\n", read_cr0(), read_cr2(), read_cr3(), read_cr4());
-	    printf("rax: 0x%.16llx, rbx: 0x%.16llx, rcx: 0x%.16llx, rdx: 0x%.16llx\n", frame.rax, frame.rbx, frame.rcx, frame.rdx);
-	    printf("rsp: 0x%.16llx, rbp: 0x%.16llx, rsi: 0x%.16llx, rdi: 0x%.16llx\n", frame.rsp, frame.rbp, frame.rsi, frame.rdi);
-	    printf("r8:  0x%.16llx, r9:  0x%.16llx, r10: 0x%.16llx, r11: 0x%.16llx\n", frame.r8, frame.r9, frame.r10, frame.r11);
-	    printf("r12: 0x%.16llx, r13: 0x%.16llx, r14: 0x%.16llx, r15: 0x%.16llx\n", frame.r12, frame.r13, frame.r14, frame.r15);
-	    printf("rfl: 0x%.16llx, rip: 0x%.16llx, cs:  0x%.16llx, ss:  0x%.16llx\n", frame.rflags, frame.rip, frame.cs, frame.ss);
-
-		hcf();
+        panic(exception_strings[frame.vector], frame);
+        hcf();
 	} else if (frame.vector >= 0x20 && frame.vector <= 0x2f) {
         // NOTE: This is intentionally left commented out because PIC is not initialized yet.
 		int irq = frame.vector - 0x20;

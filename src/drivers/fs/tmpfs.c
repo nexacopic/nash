@@ -14,8 +14,8 @@ inode_t *fs;
 
 void filesystem_setup(char *data)
 {
-    printf("Init tmpfs\n");
-    system
+    // printf("Init tmpfs\n");
+    
 }
 
 char *get_file_charptr(char *path)

@@ -1,6 +1,7 @@
 #include "vga.h"
 
 #include "cpu/cpu.h"
+#include "libc/mem.h"
 
 static volatile struct limine_framebuffer_request framebuffer_request = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
@@ -44,4 +45,13 @@ unsigned int rgb(uint8_t red, uint8_t green, uint8_t blue) {
 void draw_pixel(uint64_t x, uint64_t y, uint8_t r, uint8_t g, uint8_t b) {
     uint32_t* fb_ptr = (uint32_t*)((uintptr_t)framebuffer->address + x * 4 + y * framebuffer->pitch);
     *fb_ptr = rgb(r, b, g);
+}
+
+void set_background_color(uint16_t red, uint16_t green, uint16_t blue)
+{
+    for (int y = 0; y < getScreenHeight(); y++) {
+        for (int x = 0; x < getScreenWidth(); x++) {
+            draw_pixel(x,y, red, green, blue);
+        }
+    }
 }

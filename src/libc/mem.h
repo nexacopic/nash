@@ -4,6 +4,8 @@
 
 void init_physical_memory();
 
+void initialize_memory_block(long unsigned start_addr, long unsigned size, long unsigned start_addr_next); // only so you can cause some cool panic screens
+
 void *memcpy(void *dest, const void *src, size_t n); 
 
 void *memset(void *s, int c, size_t n);
