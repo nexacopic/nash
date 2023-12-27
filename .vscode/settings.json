@@ -10,6 +10,10 @@
         "stdint.h": "c",
         "serial.h": "c",
         "mem.h": "c",
-        "error_handler.h": "c"
+        "error_handler.h": "c",
+        "kif.h": "c",
+        "logger.h": "c",
+        "flanterm.h": "c",
+        "fb.h": "c"
     }
 }

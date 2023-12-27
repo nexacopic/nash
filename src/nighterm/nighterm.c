@@ -3,19 +3,10 @@
 #include "libc/mem.h"
 
 struct Terminal term;
-uint8_t fg_r = 255;
-uint8_t fg_g = 255;
-uint8_t fg_b = 255;
+uint32_t default_fg_color = 0xFFFFFFFF; // Default foreground color (white)
+uint32_t default_bg_color = 0x00000000; // Default background color (black)
 
-uint8_t bg_r = 0;
-uint8_t bg_g = 0;
-uint8_t bg_b = 0;
-
-// TODO: Move memset into its own stdlib
-// done!
-
-int init_nighterm(struct limine_file *font)
-{
+int init_nighterm(struct limine_file *font) {
     char *psf2buf = font->address;
     psf2Hdr hdr = *(psf2Hdr *)font->address;
     psf2buf += hdr.headerSize;
@@ -38,157 +29,142 @@ int init_nighterm(struct limine_file *font)
     return 1;
 }
 
-void nighterm_set_char_fg(uint8_t r, uint8_t b, uint8_t g)
-{
-    fg_r = r;
-    fg_g = g;
-    fg_b = b;
-}
-void nighterm_set_char_bg(uint8_t r, uint8_t b, uint8_t g)
-{
-    bg_r = r;
-    bg_g = g;
-    bg_b = b;
+void nighterm_set_char_fg(uint8_t r, uint8_t g, uint8_t b) {
+    default_fg_color = (r << 16) | (g << 8) | b;
 }
 
-void nighterm_render_char(int row, int col, char ch)
-{
+void nighterm_set_char_bg(uint8_t r, uint8_t g, uint8_t b) {
+    default_bg_color = (r << 16) | (g << 8) | b;
+}
+
+void nighterm_render_char(int row, int col, char ch, uint8_t fg_r, uint8_t fg_g, uint8_t fg_b, uint8_t bg_r, uint8_t bg_g, uint8_t bg_b) {
     int rounding = ((term.fonthdr.width % 8) != 0) ^ (term.fonthdr.width == 9);
     uint8_t *glyph = term.fontData + ch * term.fonthdr.charSize;
 
-    for (size_t y = 0; y < term.fonthdr.height; y++)
-    {
-        for (size_t x = 0; x < term.fonthdr.width; x++)
-        {
-            if ((glyph[y * ((term.fonthdr.width / 8) + rounding) + x / 8] >> (7 - x % 8)) & 1)
-            {
+    for (size_t y = 0; y < term.fonthdr.height; y++) {
+        for (size_t x = 0; x < term.fonthdr.width; x++) {
+            if ((glyph[y * ((term.fonthdr.width / 8) + rounding) + x / 8] >> (7 - x % 8)) & 1) {
                 draw_pixel(col * term.fonthdr.width + x, row * term.fonthdr.height + y, fg_r, fg_g, fg_b);
-            }
-            else
-            {
+            } else {
                 draw_pixel(col * term.fonthdr.width + x, row * term.fonthdr.height + y, bg_r, bg_g, bg_b);
             }
         }
     }
 }
 
-void nighterm_refresh()
-{
-    // Note: do not overuse this function since refreshing one character at a time is much mre efficient
-    term.curX = 0;
-    term.curY = 0;
-    int row, col;
-    for (row = 0; row < term.rows; row++)
-    {
-        for (col = 0; col < term.cols; col++)
-        {
-            char ch = term.buffer[row * term.cols + col];
-            nighterm_render_char(row, col, ch);
+
+
+void nighterm_refresh() {
+    for (int row = 0; row < term.rows; row++) {
+        for (int col = 0; col < term.cols; col++) {
+            int bufferIndex = row * term.cols + col;
+            char ch = term.text_buffer[bufferIndex];
+            uint32_t color = term.text_colors[bufferIndex];
+            uint8_t fg_r = (color >> 16) & 0xFF;
+            uint8_t fg_g = (color >> 8) & 0xFF;
+            uint8_t fg_b = color & 0xFF;
+            uint8_t bg_r = default_bg_color >> 16 & 0xFF;
+            uint8_t bg_g = default_bg_color >> 8 & 0xFF;
+            uint8_t bg_b = default_bg_color & 0xFF;
+            nighterm_render_char(row, col, ch, fg_r, fg_g, fg_b, bg_r, bg_g, bg_b);
         }
     }
 }
 
-void nighterm_clear()
-{
+void nighterm_clear() {
     size_t buffer_size = (size_t)term.rows * term.cols;
-    memset(term.buffer, ' ', buffer_size);
+    memset(term.text_buffer, ' ', buffer_size);
+
+    // Set colors properly
+    uint32_t default_color = default_fg_color;
+    for (size_t i = 0; i < buffer_size; ++i) {
+        term.text_colors[i] = default_color;
+    }
     nighterm_refresh();
 }
 
-void nighterm_write(char ch)
-{
+void nighterm_write(char ch) {
     size_t buffer_size = (size_t)term.rows * term.cols;
     nighterm_redraw();
 
-    switch (ch)
-    {
-    case '\n':
-        term.curX = 0;
-        term.curY++;
-        break;
-    case '\t':
-        term.curX += INDENT_AMOUNT - (term.curX % INDENT_AMOUNT);
-        break;
-    case '\b':
-        term.curX -= 1;
-        break;
-    case 0:
-        nighterm_do_curinv();
-        break; // ignore termination
-    default:
-        // Check if ch is not an ASCII character
-        if (ch < 0 || ch > 127)
-        {
-            ch = '\0';
-        }
+    switch (ch) {
+        case '\n':
+            term.curX = 0;
+            term.curY++;
+            break;
+        case '\t':
+            term.curX += INDENT_AMOUNT - (term.curX % INDENT_AMOUNT);
+            break;
+        case '\b':
+            term.curX -= 1;
+            break;
+        case 0:
+            nighterm_do_curinv();
+            break; // ignore termination
+        default:
+            // Check if ch is not an ASCII character
+            if (ch < 0 || ch > 127) {
+                ch = '\0';
+            }
 
-        int bufferIndex = term.curY * term.cols + term.curX;
-        term.buffer[bufferIndex] = ch;
-        if (term.curY + 1 >= term.cols)
-        {
-            nighterm_scroll_down();
-        }
-        nighterm_render_char(term.curY, term.curX, ch);
-        term.curX++;
-        nighterm_do_curinv();
-        break;
+            int bufferIndex = term.curY * term.cols + term.curX;
+            term.text_buffer[bufferIndex] = ch;
+
+            if (term.curY + 1 >= term.rows) {
+                nighterm_scroll_down();
+            }
+
+            // Use current default fg and bg colors
+            uint32_t cur_fg_color = default_fg_color;
+            uint32_t cur_bg_color = default_bg_color;
+
+            uint32_t fg = (cur_fg_color & 0xFFFFFF) | 0xFF000000; // Adding alpha channel
+            uint32_t bg = (cur_bg_color & 0xFFFFFF) | 0xFF000000; // Adding alpha channel
+
+            term.text_colors[bufferIndex] = (fg << 16) | bg;
+
+            nighterm_render_char(term.curY, term.curX, ch,
+                                 (cur_fg_color >> 16) & 0xFF, (cur_fg_color >> 8) & 0xFF, cur_fg_color & 0xFF,
+                                 (cur_bg_color >> 16) & 0xFF, (cur_bg_color >> 8) & 0xFF, cur_bg_color & 0xFF);
+
+            term.curX++;
+            nighterm_do_curinv();
+            break;
     }
 }
 
-void nighterm_move_cursor(int row, int col)
-{
+
+void nighterm_move_cursor(int row, int col) {
     nighterm_redraw();
     term.curX = col;
     term.curY = row;
     nighterm_do_curinv();
 }
-void nighterm_redraw()
-{
-    int bufferIndex = term.curY * term.cols + term.curX;
-    nighterm_render_char(term.curY, term.curX, term.buffer[bufferIndex]);
-}
 
-void nighterm_do_curinv()
-{
-
-    if (term.draw_cursor)
-    {
-        uint8_t tmp_r = 0;
-        uint8_t tmp_g = 0;
-        uint8_t tmp_b = 0;
-
-        tmp_r = bg_r;
-        tmp_g = bg_g;
-        tmp_b = bg_b;
-
-        bg_r = fg_r;
-        bg_g = fg_g;
-        bg_b = fg_b;
-
-        fg_r = tmp_r;
-        fg_g = tmp_g;
-        fg_b = tmp_b;
-
+void nighterm_do_curinv() {
+    if (term.draw_cursor) {
+        uint32_t tmp_color = default_bg_color;
+        default_bg_color = default_fg_color;
+        default_fg_color = tmp_color;
         nighterm_redraw();
-
-        tmp_r = bg_r;
-        tmp_g = bg_g;
-        tmp_b = bg_b;
-
-        bg_r = fg_r;
-        bg_g = fg_g;
-        bg_b = fg_b;
-
-        fg_r = tmp_r;
-        fg_g = tmp_g;
-        fg_b = tmp_b;
     }
 }
 
-void nighterm_scroll_down()
-{
-    size_t buffer_size = (size_t)term.rows * term.cols;
-    memcpy(term.buffer + term.rows, term.buffer, buffer_size);
-    memset(term.buffer + buffer_size - term.rows, 0, buffer_size - term.rows);
-    nighterm_redraw();
+void nighterm_redraw() {
+    int bufferIndex = term.curY * term.cols + term.curX;
+    nighterm_render_char(term.curY, term.curX, term.text_buffer[bufferIndex], (default_fg_color >> 16) & 0xFF, (default_fg_color >> 8) & 0xFF, default_fg_color & 0xFF, (default_bg_color >> 16) & 0xFF, (default_bg_color >> 8) & 0xFF, default_bg_color & 0xFF);
+}
+
+void nighterm_scroll_down() {
+    for (int i = 0; i < term.rows - 1; ++i) {
+        memcpy(term.text_buffer + i * term.cols, term.text_buffer + (i + 1) * term.cols, term.cols);
+        memcpy(term.text_colors + i * term.cols, term.text_colors + (i + 1) * term.cols, term.cols * sizeof(uint32_t));
+    }
+    int last_row_start = (term.rows - 1) * term.cols;
+    memset(term.text_buffer + last_row_start, ' ', term.cols);
+    for (int i = 0; i < term.cols; ++i) {
+        term.text_colors[last_row_start + i] = default_fg_color;
+    }
+    term.curY = term.rows - 1;
+    nighterm_refresh();
 }

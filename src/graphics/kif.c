@@ -48,7 +48,7 @@ void draw_image(struct limine_file* image) {
         }
         i++; // Move past the newline character
 
-        draw_pixel(x, y, r, b, g);
+        draw_pixel(x, y, r, g, b);
         x++;
         if (x == width) {
             x = 0;

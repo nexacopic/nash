@@ -44,7 +44,7 @@ unsigned int rgb(uint8_t red, uint8_t green, uint8_t blue) {
 
 void draw_pixel(uint64_t x, uint64_t y, uint8_t r, uint8_t g, uint8_t b) {
     uint32_t* fb_ptr = (uint32_t*)((uintptr_t)framebuffer->address + x * 4 + y * framebuffer->pitch);
-    *fb_ptr = rgb(r, b, g);
+    *fb_ptr = rgb(r, g, b);
 }
 
 void set_background_color(uint16_t red, uint16_t green, uint16_t blue)
@@ -54,4 +54,20 @@ void set_background_color(uint16_t red, uint16_t green, uint16_t blue)
             draw_pixel(x,y, red, green, blue);
         }
     }
+}
+
+RGBColor decode_color(uint32_t color) {
+    RGBColor rgb;
+    rgb.r = (color >> 16) & 0xFF;  // Extract red component
+    rgb.g = (color >> 8) & 0xFF;   // Extract green component
+    rgb.b = color & 0xFF;          // Extract blue component
+    return rgb;
+}
+
+RGBColor decode_fg_color(uint32_t fg_color) {
+    return decode_color(fg_color);
+}
+
+RGBColor decode_bg_color(uint32_t bg_color) {
+    return decode_color(bg_color);
 }

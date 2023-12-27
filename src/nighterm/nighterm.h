@@ -7,18 +7,11 @@
 #define INDENT_AMOUNT 4
 
 #ifndef PSF2_MODE
-
 #define PSF_MODE 2
-
 #define PSF_MAGIC0 0x72
 #define PSF_MAGIC1 0xb5
 #define PSF_MAGIC2 0x4a
 #define PSF_MAGIC3 0x86
-
-#endif
-
-#ifndef DRAW_CURSOR
-#define DRAW_CURSOR 0
 #endif
 
 typedef struct {
@@ -40,9 +33,10 @@ struct Terminal {
     int cols;
     int cx;
     int cy;
-    char buffer[4096*4];
     char* title;
     int draw_cursor;
+    char text_buffer[4096*4]; // Separate text buffer
+    uint32_t text_colors[4096*4]; // Colors for each character in the text buffer
 };
 
 extern struct Terminal term;
