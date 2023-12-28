@@ -1,6 +1,6 @@
 #include "mem.h"
 #include <limine.h>
-#include <nighterm/nighterm.h>
+#include "utilities/printf.h"
 
 
 volatile struct limine_memmap_request memmap_request = { // memory map

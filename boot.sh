@@ -16,4 +16,4 @@ xorriso -as mkisofs -b limine-bios-cd.bin -no-emul-boot -boot-load-size 4 -boot-
 ./limine/limine bios-install image.iso
 rm -rf iso_root
 
-qemu-system-x86_64 -hda image.iso "${@}"
+qemu-system-x86_64 -hda image.iso "${@}" -m 2G

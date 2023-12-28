@@ -1,7 +1,10 @@
 #include "idt.h"
-#include "utilities/printf.h"
 #include "utilities/panic.h"
 #include "cpu/cpu.h"
+#include <stdint.h>
+#include <stddef.h>
+
+#define NULL (0)
 
 #define IDT_ENTRIES 256
 
@@ -89,7 +92,6 @@ void excp_handler(int_frame_t frame) {
         //pic_send_eoi();
 		//apic_send_eoi();
 
-        printf("Tried to call IRQ%d handler, but PIC is not remapped?", irq);
 	} else if (frame.vector == 0x80) {
         // handle syscalls here
     }
@@ -98,11 +100,9 @@ void excp_handler(int_frame_t frame) {
 void irq_register(uint8_t irq, interrupt_handler handler)
 {
 	irq_handlers[irq] = handler;
-	printf("registered handler for irq %i", irq);
 }
 
 void irq_deregister(uint8_t irq)
 {
 	irq_handlers[irq] = NULL;
-	printf("deregistered handler for irq %i", irq);
 }

@@ -1,16 +1,12 @@
-#include "utilities/printf.h"
 #include <stdint.h>
 #include "panic.h"
-#include "display/vga.h"
+#include "utilities/printf.h"
 
 
 void panic(const char *reason, int_frame_t frame)
 {
-    // oh shit!!!!!!!!!!!!!!
-    nighterm_clear();
+
     set_background_color(255, 0, 0);
-    nighterm_set_char_bg(255, 0, 0);
-    nighterm_set_char_fg(255, 255, 255);
     printf(":(\n");
     printf("%s\n", reason);
     printf("dumping registers\n\n");

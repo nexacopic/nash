@@ -1,5 +1,6 @@
 #include "kif.h"
 #include <stdint.h>
+/*
 
 void draw_image(struct limine_file* image) {
     char* rawData = (char*)image->address;
@@ -64,3 +65,4 @@ void draw_image(struct limine_file* image) {
     term.curY += imageRows;
 }
 
+*/

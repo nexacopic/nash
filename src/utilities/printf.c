@@ -32,7 +32,7 @@
 // Note: Edited
 ///////////////////////////////////////////////////////////////////////////////
 #include "printf.h"
-#include <nighterm/nighterm.h>
+#include "utilities/systerm.h"
 #include <serial/serial.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -157,7 +157,7 @@ static inline void _out_null(char character, void *buffer, size_t idx,
 // internal _putchar wrapper
 static inline void _out_char(char character, UNUSED void *buffer,
                              UNUSED size_t idx, UNUSED size_t maxlen) {
-    nighterm_write(character);
+    put_char(character);
 }
 
 // internal output function wrapper
