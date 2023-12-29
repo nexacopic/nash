@@ -22,10 +22,10 @@ void _start(void)
 {
     init_display();
     initsysterm(mod_request.response->modules[0]);
-    printf("Initialized display.\n");
+    printf("Initialized display\n");
 
     init_idt();
-    printf("Initialized IDT.\n");
+    printf("Initialized IDT\n");
     
     init_physical_memory();
     printf("Initialized Memory Manager\n");

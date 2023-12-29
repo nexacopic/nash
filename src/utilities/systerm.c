@@ -61,14 +61,15 @@ void put_text(const char* txt)
 
 void put_char(char ch)
 {
-    renderchar(cury, curx, ch);
-	curx++;
-	if (ch=="\n"){
+	if (ch==0x0A){
 		cury++;
 		curx=0;
 	}
-	
-	
+	else
+	{
+		renderchar(cury, curx, ch);
+		curx++;
+	}
 }
 
 void renderchar(int row, int col, char ch)
